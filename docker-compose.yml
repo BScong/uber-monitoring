@@ -1,0 +1,25 @@
+influxdb:
+  image: influxdb:latest
+  container_name: influxdb
+  ports:
+    - "8083:8083"
+    - "8086:8086"
+    - "8090:8090"
+  env_file:
+    - 'env.influxdb'
+  volumes:
+    - /etc/graf-server/influxdb_data:/var/lib/influxdb
+grafana:
+  image: grafana/grafana:latest
+  container_name: grafana
+  ports:
+    - "3000:3000"
+  links:
+    - influxdb
+  volumes:
+    - /etc/graf-server/grafana_data:/var/lib/grafana/
+    - ./grafana.ini:/etc/grafana/grafana.ini
+python:
+  build: python
+  container_name: python
+
