@@ -60,7 +60,8 @@ namespace :deploy do
   desc 'Install'
   task :install do
     on roles(:app) do
-        execute "cd #{current_path}/ && docker pull grafana/grafana && docker pull influxdb"
+        execute "cd #{current_path}/ && docker-compose -p mnt stop && docker-compose -p mnt rm -f && docker pull grafana/grafana && docker pull influxdb && docker-compose -p mnt build"
+#       execute "docker rmi python -f --no-prune && docker rmi grafana/grafana -f --no-prune && docker rmi influxdb -f --no-prune"
     end
   end
 
@@ -68,7 +69,7 @@ namespace :deploy do
   task :start do
     on roles(:app) do
 
-      execute "cd #{current_path}/ && docker-compose up -d"
+      execute "cd #{current_path}/ && docker-compose -p mnt up -d python influxdb grafana"
       within current_path do
         #nothing
       end
