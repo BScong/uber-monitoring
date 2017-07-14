@@ -7,7 +7,7 @@ import time
 
 uberSession = Session(params.server_token)
 uberClient = UberRidesClient(uberSession)
-#influxClient = InfluxDBClient(params.influxHost, 8086, params.influxUser, params.influxPass, 'uber')
+influxClient = InfluxDBClient(params.influxHost, 8086, params.influxUser, params.influxPass, 'uber')
 
 def job():
 	start = {
@@ -39,6 +39,7 @@ def getFares(start, end):
 	return estimate
 
 def sendFaresToInflux(estimate, start, end):
+	global influxClient
 	now = time.time()*1000000000
 	for fare in estimate:
 		json_body = [

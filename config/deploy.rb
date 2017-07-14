@@ -2,7 +2,7 @@
 lock '3.4.0'
 
 set :application, 'grafana'
-set :repo_url, 'git@github.com:BScong/uber-monitoring.git'
+set :repo_url, 'https://github.com/BScong/uber-monitoring.git'
 
 set :branch, 'master'
 set :scm, :git
@@ -15,7 +15,7 @@ set :linked_files, %w{python/params.py}
 set :default_env, { node_env: fetch(:node_env) }
 
 set :keep_releases, 5
-set :ssh_options, { :forward_agent => true, :port=>6543 }
+set :ssh_options, { :forward_agent => true, :port=>22 }
 
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, '/var/www/my_app_name'
@@ -45,6 +45,17 @@ set :ssh_options, { :forward_agent => true, :port=>6543 }
 # set :keep_releases, 5
 
 namespace :deploy do
+
+  task :copy_shared_files do
+    on roles(:app) do
+      # suppose we never copied those files
+      fetch(:linked_files).each do |fname|
+        if test("[ ! -f #{shared_path}/"+fname+" ]")
+          upload! fname, "#{shared_path}/"+fname
+        end
+      end
+    end
+  end
 
   desc 'Install'
   task :install do
@@ -77,7 +88,6 @@ namespace :deploy do
   after :publishing, :start
 
   before :start, 'deploy:install'
-
-
+  before 'deploy:check:linked_files', 'deploy:copy_shared_files'
 
 end

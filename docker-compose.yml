@@ -22,4 +22,6 @@ grafana:
 python:
   build: python
   container_name: python
+  volumes:
+   - /home/deployer/uber-monitoring/shared/python/params.py:/usr/src/app/params.py
 
