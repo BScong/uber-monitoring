@@ -40,7 +40,7 @@ def getFares(start, end):
 
 def sendFaresToInflux(estimate, start, end):
 	global influxClient
-	now = time.time()*1000000000
+	now = int(time.time()*1000000000)
 	for fare in estimate:
 		json_body = [
 		    {
@@ -56,7 +56,8 @@ def sendFaresToInflux(estimate, start, end):
 		            "high_estimate": fare['high_estimate'],
 		            "low_estimate": fare['low_estimate'],
 		            "duration": fare['duration'],
-		            "distance": fare['distance']
+		            "distance": fare['distance'],
+		            "surge_multiplier":fare['surge_multiplier']
 		        }
 		    }
 		]
