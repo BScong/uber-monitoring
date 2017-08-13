@@ -20,11 +20,15 @@ def job():
 		'lon' : params.end_longitude,
 		'name' : params.end_name
 	}
-	estimate = getFares(start,end)
-	sendFaresToInflux(estimate, start, end)
+	try:
+		estimate = getFares(start,end)
+		sendFaresToInflux(estimate, start, end)
 
-	estimate = getFares(end,start)
-	sendFaresToInflux(estimate, end, start)
+		estimate = getFares(end,start)
+		sendFaresToInflux(estimate, end, start)
+	except Exception:
+		pass
+		
 	return
 
 def getFares(start, end):
